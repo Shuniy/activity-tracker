@@ -1,13 +1,19 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { purple } from "../utils/colors";
 
 const DateHeader = (props) => {
-    const {date} = props
-    return (
-        <View>
-            <Text>{date}</Text>
-        </View>
-    )
-}
+  const { date } = props;
+  return <Text style={styles.date}>{date}</Text>;
+};
 
-export default DateHeader
+export default DateHeader;
+
+const styles = StyleSheet.create({
+  date: {
+    color: purple,
+    fontSize: 25,
+    textAlign: "center",
+    paddingTop: 10,
+  },
+});
