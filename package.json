@@ -10,12 +10,14 @@
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/slider": "3.0.3",
     "expo": "^42.0.0",
+    "expo-app-loading": "^1.1.2",
     "expo-splash-screen": "~0.11.2",
     "expo-status-bar": "~1.0.4",
     "expo-updates": "~0.8.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-calendars": "^1.1264.0",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-reanimated": "~2.2.0",
     "react-native-screens": "~3.4.0",
@@ -28,5 +30,11 @@
   "devDependencies": {
     "@babel/core": "~7.9.0"
   },
-  "private": true
+  "private": true,
+  "name": "activity-tracker",
+  "version": "1.0.0",
+  "description": "activity tracker app",
+  "repository": "https://github.com/ZippySphinx/activity-tracker.git",
+  "author": "ZippySphinx <shubhamkumar1239@outlook.com>",
+  "license": "MIT"
 }

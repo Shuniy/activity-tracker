@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import {
-  Text,
   View,
   TouchableOpacity,
-  ScrollView,
+  Text,
   StyleSheet,
+  Platform,
 } from "react-native";
 import {
   getMetricMetaInfo,
   timeToString,
   getDailyReminderValue,
 } from "../utils/helpers";
-import { purple, white, gray } from "../utils/colors";
 import AppSlider from "./AppSlider";
 import AppStepper from "./AppStepper";
 import DateHeader from "./DateHeader";
@@ -19,8 +18,10 @@ import { Ionicons } from "@expo/vector-icons";
 import TextButton from "./TextButton";
 import { submitEntry, removeEntry } from "../utils/api";
 import { connect } from "react-redux";
+import { addEntry } from "../actions";
+import { purple, white } from "../utils/colors";
 
-const SubmitBtn = ({ onPress }) => {
+function SubmitBtn({ onPress }) {
   return (
     <TouchableOpacity
       style={
@@ -31,77 +32,63 @@ const SubmitBtn = ({ onPress }) => {
       <Text style={styles.submitBtnText}>SUBMIT</Text>
     </TouchableOpacity>
   );
-};
-
-export class AddEntry extends Component {
+}
+class AddEntry extends Component {
   state = {
-    run: 5,
-    bike: 10,
-    swim: 20,
-    sleep: 30,
-    eat: 40,
+    run: 0,
+    bike: 0,
+    swim: 0,
+    sleep: 0,
+    eat: 0,
   };
-
   increment = (metric) => {
     const { max, step } = getMetricMetaInfo(metric);
 
-    this.setState((prevState) => {
-      const Count = prevState[metric] + step;
+    this.setState((state) => {
+      const count = state[metric] + step;
 
       return {
-        ...prevState,
-        [metric]: Math.min(Count, max),
+        ...state,
+        [metric]: count > max ? max : count,
       };
     });
   };
-
   decrement = (metric) => {
-    this.setState((prevState) => {
-      const Count = prevState[metric] - getMetricMetaInfo(metric).step;
+    this.setState((state) => {
+      const count = state[metric] - getMetricMetaInfo(metric).step;
 
       return {
-        [metric]: Math.max(Count, 0),
+        ...state,
+        [metric]: count < 0 ? 0 : count,
       };
     });
   };
-
   slide = (metric, value) => {
     this.setState(() => ({
       [metric]: value,
     }));
   };
-
   submit = () => {
     const key = timeToString();
     const entry = this.state;
 
-    // Update Redux
     this.props.dispatch(
-      addEntry({
+      addEntry([{
         [key]: entry,
-      })
+      }])
     );
 
-    this.setState(() => ({
-      run: 0,
-      bike: 0,
-      swim: 0,
-      sleep: 0,
-      eat: 0,
-    }));
+    this.setState(() => ([{ run: 0, bike: 0, swim: 0, sleep: 0, eat: 0 }]));
 
-    // Go to homepage
+    // Navigate to home
 
-    // Save to Database  or Async Storage
     submitEntry({ key, entry });
 
-    // Clearn the default notification which means display the content
+    // Clear local notification
   };
-
   reset = () => {
     const key = timeToString();
 
-    // Update Redux
     this.props.dispatch(
       addEntry({
         [key]: getDailyReminderValue(),
@@ -110,10 +97,8 @@ export class AddEntry extends Component {
 
     // Route to Home
 
-    // Update Database or Async Storage
     removeEntry(key);
   };
-
   render() {
     const metaInfo = getMetricMetaInfo();
 
@@ -140,7 +125,7 @@ export class AddEntry extends Component {
           const value = this.state[key];
 
           return (
-            <View style={styles.row} key={key}>
+            <View key={key} style={styles.row}>
               {getIcon()}
               {type === "slider" ? (
                 <AppSlider
@@ -165,23 +150,10 @@ export class AddEntry extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  const key = timeToString();
-
-  return {
-    alreadyLogged: state[key] && typeof state[key].today === "undefined",
-  };
-}
-
-export default connect(mapStateToProps)(AddEntry);
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
-    paddingBottom: 20,
-    paddingLeft: 20,
-    paddingRight: 15,
+    padding: 20,
     backgroundColor: white,
   },
   row: {
@@ -221,3 +193,13 @@ const styles = StyleSheet.create({
     marginRight: 30,
   },
 });
+
+function mapStateToProps(state) {
+  const key = timeToString();
+
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === "undefined",
+  };
+}
+
+export default connect(mapStateToProps)(AddEntry);
