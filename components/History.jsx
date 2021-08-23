@@ -56,7 +56,7 @@ class History extends Component {
     return (
       <View style={styles.item}>
         <Text style={styles.noDataText}>
-          You didn't log any data on this day.
+          👎 You didn't log any data on this day.
         </Text>
       </View>
     );
@@ -66,9 +66,9 @@ class History extends Component {
     const { entries } = this.props;
     const { ready } = this.state;
 
-    if (ready === false) {
-      return <AppLoading />;
-    }
+    // if (ready === false) {
+    //   return <AppLoading />;
+    // }
 
     const Entries = Object.keys(entries)
       .map((key) => {
