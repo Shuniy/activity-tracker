@@ -12,7 +12,6 @@ import { timeToString, getDailyReminderValue } from "../utils/helpers";
 import { fetchCalendarResults } from "../utils/api";
 import { Agenda, CalendarList } from "react-native-calendars";
 import { white } from "../utils/colors";
-import DateHeader from "./DateHeader";
 import MetricCard from "./MetricCard";
 import AppLoading from "expo-app-loading";
 
@@ -40,59 +39,49 @@ class History extends Component {
         }))
       );
   }
-  renderItem = ({ today, ...metrics }, formattedDate, key) => (
+  renderItem = ({today, ...metrics}) => (
     <View style={styles.item}>
       {today ? (
         <View>
-          <DateHeader date={formattedDate} />
           <Text style={styles.noDataText}>{today}</Text>
         </View>
       ) : (
         <TouchableOpacity onPress={() => console.log("Pressed!")}>
-          <MetricCard date={formattedDate} metrics={metrics} />
+          <MetricCard metrics={metrics} />
         </TouchableOpacity>
       )}
     </View>
   );
-  renderEmptyDate(formattedDate) {
+  renderEmptyDate({...metrics}) {
     return (
       <View style={styles.item}>
-        <DateHeader date={formattedDate} />
         <Text style={styles.noDataText}>
           You didn't log any data on this day.
         </Text>
       </View>
     );
   }
-  renderItem = ({ today, ...metrics }) => (
-    <View>
-      {today ? (
-        <Text>{JSON.stringify(today)}</Text>
-      ) : (
-        <Text>{JSON.stringify(metrics)}</Text>
-      )}
-    </View>
-  );
-  renderEmptyDate() {
-    return (
-      <View>
-        <Text>{JSON.stringify(this.props)}</Text>
-        <Text>No Data for this day</Text>
-      </View>
-    );
-  }
+
   render() {
     const { entries } = this.props;
+    const { ready } = this.state;
+
+    if (ready === false) {
+      return <AppLoading />;
+    }
+
+    const Entries = Object.keys(entries)
+      .map((key) => {
+        return { [key]: entries[key] ? [entries[key]] : [] };
+      })
+      .reduce((obj, item) => ({ ...obj, ...item }), {});
 
     return (
-
-        <Agenda
-          items={entries}
-          renderItem={this.renderItem}
-          renderEmptyDate={this.renderEmptyDate}
-        />
-        
-
+      <Agenda
+        items={Entries}
+        renderItem={this.renderItem}
+        renderEmptyDate={this.renderEmptyDate}
+      />
     );
   }
 }

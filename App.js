@@ -13,6 +13,7 @@ export default function App() {
   return (
     <Provider store = {store}>
       <View style={styles.container}>
+      <StatusBar />
         <History />
         {/* <AddEntry/> */}
       </View>

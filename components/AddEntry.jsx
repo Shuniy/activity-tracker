@@ -73,12 +73,12 @@ class AddEntry extends Component {
     const entry = this.state;
 
     this.props.dispatch(
-      addEntry([{
+      addEntry({
         [key]: entry,
-      }])
+      })
     );
 
-    this.setState(() => ([{ run: 0, bike: 0, swim: 0, sleep: 0, eat: 0 }]));
+    this.setState(() => ({ run: 0, bike: 0, swim: 0, sleep: 0, eat: 0 }));
 
     // Navigate to home
 
