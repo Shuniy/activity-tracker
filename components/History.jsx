@@ -39,20 +39,24 @@ class History extends Component {
         }))
       );
   }
-  renderItem = ({today, ...metrics}) => (
+  renderItem = ({ today, ...metrics }) => (
     <View style={styles.item}>
       {today ? (
         <View>
           <Text style={styles.noDataText}>{today}</Text>
         </View>
       ) : (
-        <TouchableOpacity onPress={() => console.log("Pressed!")}>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate("Entry Detail", { entryId: key })
+          }
+        >
           <MetricCard metrics={metrics} />
         </TouchableOpacity>
       )}
     </View>
   );
-  renderEmptyDate({...metrics}) {
+  renderEmptyDate({ ...metrics }) {
     return (
       <View style={styles.item}>
         <Text style={styles.noDataText}>
@@ -66,15 +70,19 @@ class History extends Component {
     const { entries } = this.props;
     const { ready } = this.state;
 
-    // if (ready === false) {
-    //   return <AppLoading />;
-    // }
+    if (ready === false) {
+      return <AppLoading />;
+    }
 
     const Entries = Object.keys(entries)
       .map((key) => {
-        return { [key]: entries[key] ? [entries[key]] : [] };
+        return {
+          [key]: entries[key] ? [entries[key]] : [],
+        };
       })
       .reduce((obj, item) => ({ ...obj, ...item }), {});
+
+    // console.log(Entries);
 
     return (
       <Agenda

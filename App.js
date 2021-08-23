@@ -1,25 +1,19 @@
-import { StatusBar } from "expo-status-bar";
+import "react-native-gesture-handler";
 import React from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
 import AddEntry from "./components/AddEntry";
-import { Provider } from "react-redux";
 import { createStore } from "redux";
+import { Provider } from "react-redux";
 import reducer from "./reducers";
 import History from "./components/History";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-import { purple, white, tintColor, gray } from "./utils/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { purple, white } from "./utils/colors";
 import Constants from "expo-constants";
-
-const Tab =
-  Platform.OS === "ios"
-    ? createBottomTabNavigator()
-    : createMaterialTopTabNavigator();
-
-const store = createStore(reducer);
+import EntryDetail from "./components/EntryDetail";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 
 function FitnessStatusBar({ backgroundColor, ...props }) {
   return (
@@ -29,58 +23,115 @@ function FitnessStatusBar({ backgroundColor, ...props }) {
   );
 }
 
-const Tabs = () => {
-  return (
-    <View style={styles.container}>
-      <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              let icon;
-              if (route.name === "AddEntry") {
-                icon = (
-                  <FontAwesome name="plus-square" size={size} color={color} />
-                );
-              } else if (route.name === "History") {
-                icon = (
-                  <Ionicons name="ios-bookmarks" size={size} color={color} />
-                );
-              }
-              return icon;
-            },
-            activeTintColor: Platform.OS === "ios" ? purple : white,
-            style: {
-              backgroundColor: Platform.OS === "ios" ? white : purple,
-            },
-            indicatorStyle: {
-              // Android tab indicator (line at the bottom of the tab)
-              backgroundColor: "yellow",
-            },
-          })}
-        >
-          <Tab.Screen name="History" component={History} />
-          <Tab.Screen name="AddEntry" component={AddEntry} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </View>
-  );
+const RouteConfigs = {
+  History: {
+    name: "History",
+    component: History,
+    options: {
+      tabBarIcon: ({ tintColor }) => (
+        <Ionicons name="ios-bookmarks" size={30} color={tintColor} />
+      ),
+      title: "History",
+    },
+  },
+  AddEntry: {
+    component: AddEntry,
+    name: "AddEntry",
+    options: {
+      tabBarIcon: ({ tintColor }) => (
+        <FontAwesome name="plus-square" size={30} color={tintColor} />
+      ),
+      title: "Add Entry",
+    },
+  },
 };
 
-export default function App() {
-  // Uncomment to reset local data:
-  // AsyncStorage.clear()
-  return (
-    <Provider store={store}>
-      <View style={styles.container}>
-        <FitnessStatusBar backgroundColor={white} barStyle="light" />
-        <Tabs />
-      </View>
-    </Provider>
-  );
+const TabNavigatorConfig = {
+  navigationOptions: {
+    header: null,
+  },
+  screenOptions: {
+    activeTintColor: Platform.OS === "ios" ? purple : white,
+    style: {
+      height: 56,
+      backgroundColor: Platform.OS === "ios" ? white : purple,
+      shadowColor: "rgba(0, 0, 0, 0.24)",
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1,
+    },
+    indicatorStyle: {
+      backgroundColor: "yellow",
+    },
+  },
+};
+
+const Tab =
+  Platform.OS === "ios"
+    ? createBottomTabNavigator()
+    : createMaterialTopTabNavigator();
+
+const TabNav = () => (
+  <Tab.Navigator {...TabNavigatorConfig}>
+    <Tab.Screen {...RouteConfigs["History"]} />
+    <Tab.Screen {...RouteConfigs["AddEntry"]} />
+  </Tab.Navigator>
+);
+
+// Config for StackNav
+const StackNavigatorConfig = {
+  options: "screen",
+};
+const StackConfig = {
+  TabNav: {
+    name: "Home",
+    component: TabNav,
+    options: { headerShown: false },
+  },
+  EntryDetail: {
+    name: "Entry Detail",
+    component: EntryDetail,
+    options: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      },
+      title: "Entry Detail",
+    },
+  },
+};
+const Stack = createStackNavigator();
+const MainNav = () => (
+  <Stack.Navigator {...StackNavigatorConfig}>
+    <Stack.Screen {...StackConfig["TabNav"]} />
+    <Stack.Screen {...StackConfig["EntryDetail"]} />
+  </Stack.Navigator>
+);
+
+export default class App extends React.Component {
+  render() {
+    const store = createStore(reducer);
+    return (
+      <Provider store={store}>
+        <View style={{ flex: 1 }}>
+          <FitnessStatusBar backgroundColor={white} barStyle="light" />
+          <NavigationContainer>
+            <MainNav />
+          </NavigationContainer>
+        </View>
+      </Provider>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
