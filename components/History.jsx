@@ -39,7 +39,7 @@ class History extends Component {
         }))
       );
   }
-  renderItem = ({ today, ...metrics }) => (
+  renderItem = ({ today, ...metrics }, key) => (
     <View style={styles.item}>
       {today ? (
         <View>
