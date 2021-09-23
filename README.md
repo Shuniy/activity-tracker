@@ -19,8 +19,8 @@
 ## Screenshots
 
 ### Homepage
-<img src="images/todayHomepage.png" alt="drawing" width="220"/>
-<img src="images/nodatalogged.png" alt="drawing" width="220"/>
+<img src="images/todayHomepage.png" alt="drawing" width="200"/>
+<img src="images/nodatalogged.png" alt="drawing" width="200"/>
 <img src="images/dataloggedpreviously.png" alt="drawing" width="220"/>
 <img src="images/history.png" alt="drawing" width="220"/>
 
