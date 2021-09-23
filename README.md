@@ -19,17 +19,18 @@
 ## Screenshots
 
 ### Homepage
-<img src="images/todayHomepage.png" alt="drawing" width="250"/>
-<img src="images/nodatalogged.png" alt="drawing" width="250"/>
-<img src="images/dataloggedpreviously.png" alt="drawing" width="250"/>
-<img src="images/history.png" alt="drawing" width="250"/>
+<img src="images/todayHomepage.png" alt="drawing" width="220"/>
+<img src="images/nodatalogged.png" alt="drawing" width="220"/>
+<img src="images/dataloggedpreviously.png" alt="drawing" width="220"/>
+<img src="images/history.png" alt="drawing" width="220"/>
 
 ### Calender
-<img src="images/calender.png" alt="drawing" width="250"/>
-<img src="images/historycalender.png" alt="drawing" width="250"/>
+<img src="images/calender.png" alt="drawing" width="220"/>
+<img src="images/historycalender.png" alt="drawing" width="220"/>
 
 ### Added Entry
-<img src="images/addentry.png" alt="drawing" width="250"/>
-<img src="images/todaydatalogged.png" alt="drawing" width="250"/>
-<img src="images/statechanged.png" alt="drawing" width="250"/>
+<img src="images/addentry.png" alt="drawing" width="220"/>
+<img src="images/todaydatalogged.png" alt="drawing" width="220"/>
+<img src="images/statechanged.png" alt="drawing" width="220"/>
+<img src="images/previousdate.png" alt="drawing" width="220"/>
 
